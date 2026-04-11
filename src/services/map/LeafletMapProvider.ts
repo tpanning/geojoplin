@@ -19,6 +19,11 @@ export default class LeafletMapProvider implements MapProvider {
 		this.map.setView([latitude, longitude], zoom);
 	}
 
+	public addMarker(latitude: number, longitude: number, title: string): void {
+		if (!this.map) throw new Error('Map not initialized');
+		L.marker([latitude, longitude]).addTo(this.map).bindPopup(title);
+	}
+
 	public destroy(): void {
 		if (this.map) {
 			this.map.remove();
