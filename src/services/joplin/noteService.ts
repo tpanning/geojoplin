@@ -15,8 +15,12 @@ const fetchPage = async (page: number): Promise<PaginatedResponse<JoplinNote>> =
 	});
 };
 
-const isGeotagged = (note: JoplinNote): boolean => {
-	return note.latitude !== 0 || note.longitude !== 0;
+export const isGeotagged = (note: JoplinNote): boolean => {
+	const lat = note.latitude;
+	const lon = note.longitude;
+	if (!lat && !lon) return false;
+	if (!Number.isFinite(lat) || !Number.isFinite(lon)) return false;
+	return lat !== 0 || lon !== 0;
 };
 
 export const fetchGeotaggedNotes = async (): Promise<JoplinNote[]> => {
