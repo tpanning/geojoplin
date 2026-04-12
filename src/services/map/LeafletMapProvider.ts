@@ -4,6 +4,7 @@ import { MapProvider } from './MapProvider';
 export default class LeafletMapProvider implements MapProvider {
 
 	private map: L.Map | null = null;
+	private markerPositions: L.LatLngTuple[] = [];
 
 	public initialize(container: HTMLElement): void {
 		this.map = L.map(container);
@@ -22,6 +23,12 @@ export default class LeafletMapProvider implements MapProvider {
 	public addMarker(latitude: number, longitude: number, title: string): void {
 		if (!this.map) throw new Error('Map not initialized');
 		L.marker([latitude, longitude]).addTo(this.map).bindPopup(title);
+		this.markerPositions.push([latitude, longitude]);
+	}
+
+	public fitToMarkers(): void {
+		if (!this.map || this.markerPositions.length === 0) return;
+		this.map.fitBounds(L.latLngBounds(this.markerPositions), { maxZoom: 14 });
 	}
 
 	public destroy(): void {
