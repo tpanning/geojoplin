@@ -2,12 +2,10 @@ import joplinClient from './joplinClient';
 import { JoplinNote, PaginatedResponse } from './types';
 
 const noteFields = 'id,title,latitude,longitude';
-// TODO: Allow the user to specify which tags/notebooks to include in the search, and use that instead of a hardcoded tag.
-const geotaggedTag = 'geojoplin-test';
 
-const fetchPage = async (token: string, page: number): Promise<PaginatedResponse<JoplinNote>> => {
+const fetchPage = async (token: string, query: string, page: number): Promise<PaginatedResponse<JoplinNote>> => {
 	const response = await joplinClient.get<PaginatedResponse<JoplinNote>>(token, '/search', {
-		query: 'tag:' + geotaggedTag,
+		query,
 		type: 'note',
 		fields: noteFields,
 		page: String(page),
@@ -30,13 +28,13 @@ export const isGeotagged = (note: JoplinNote): boolean => {
 	return lat !== 0 || lon !== 0;
 };
 
-export const fetchGeotaggedNotes = async (token: string): Promise<JoplinNote[]> => {
+export const fetchGeotaggedNotes = async (token: string, query: string): Promise<JoplinNote[]> => {
 	const notes: JoplinNote[] = [];
 	let page = 1;
 	let hasMore = true;
 
 	while (hasMore) {
-		const response = await fetchPage(token, page);
+		const response = await fetchPage(token, query, page);
 		notes.push(...response.items.filter(isGeotagged));
 		hasMore = response.has_more;
 		page++;

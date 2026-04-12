@@ -32,7 +32,9 @@ const MapView: React.FC<Props> = ({ notes }) => {
 
 	useEffect(() => {
 		const provider = providerRef.current;
-		if (!provider || notes.length === 0) return;
+		if (!provider) return;
+		provider.clearMarkers();
+		if (notes.length === 0) return;
 		for (const note of notes) {
 			provider.addMarker(note.latitude, note.longitude, note.title);
 		}
