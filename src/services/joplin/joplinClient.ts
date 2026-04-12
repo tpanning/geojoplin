@@ -1,10 +1,15 @@
-// TODO: Replace with dynamic port discovery
-const port = 41184;
+import { discoverPort } from './portDiscovery';
 
-const baseUrl = `http://localhost:${port}`;
+let portPromise: Promise<number> | null = null;
+
+const getBaseUrl = async (): Promise<string> => {
+	if (!portPromise) portPromise = discoverPort();
+	const port = await portPromise;
+	return `http://localhost:${port}`;
+};
 
 const get = async <T>(token: string, path: string, params: Record<string, string> = {}): Promise<T> => {
-	const url = new URL(`${baseUrl}${path}`);
+	const url = new URL(`${await getBaseUrl()}${path}`);
 	url.searchParams.set('token', token);
 	for (const [key, value] of Object.entries(params)) {
 		url.searchParams.set(key, value);
