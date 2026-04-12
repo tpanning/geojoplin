@@ -1,12 +1,9 @@
 // TODO: Replace with dynamic port discovery
 const port = 41184;
 
-// TODO: Replace with user-provided token
-const token = 'foobar';
-
 const baseUrl = `http://localhost:${port}`;
 
-const get = async <T>(path: string, params: Record<string, string> = {}): Promise<T> => {
+const get = async <T>(token: string, path: string, params: Record<string, string> = {}): Promise<T> => {
 	const url = new URL(`${baseUrl}${path}`);
 	url.searchParams.set('token', token);
 	for (const [key, value] of Object.entries(params)) {
