@@ -36,7 +36,7 @@ const MapView: React.FC<Props> = ({ notes }) => {
 		provider.clearMarkers();
 		if (notes.length === 0) return;
 		for (const note of notes) {
-			provider.addMarker(note.latitude, note.longitude, note.title);
+			provider.addMarker(note.latitude, note.longitude, note.title, note.id);
 		}
 		provider.fitToMarkers();
 	}, [notes]);

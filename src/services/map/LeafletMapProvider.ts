@@ -20,9 +20,10 @@ export default class LeafletMapProvider implements MapProvider {
 		this.map.setView([latitude, longitude], zoom);
 	}
 
-	public addMarker(latitude: number, longitude: number, title: string): void {
+	public addMarker(latitude: number, longitude: number, title: string, noteId: string): void {
 		if (!this.map) throw new Error('Map not initialized');
-		const marker = L.marker([latitude, longitude]).addTo(this.map).bindPopup(title);
+		const popupContent = `<a href="joplin://x-callback-url/openNote?id=${noteId}">${title}</a>`;
+		const marker = L.marker([latitude, longitude]).addTo(this.map).bindPopup(popupContent);
 		this.markers.push(marker);
 	}
 
