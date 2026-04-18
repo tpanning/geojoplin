@@ -12,12 +12,13 @@ const createWindow = () => {
 		},
 	});
 
-	// Intercept joplin:// deep links — open them via the OS rather than navigating
+	// Intercept any external navigation — open it in the OS default browser/handler
 	win.webContents.on('will-navigate', (event, url) => {
-		if (url.startsWith('joplin://')) {
-			event.preventDefault();
-			void shell.openExternal(url);
-		}
+		const devServerUrl = process.env['VITE_DEV_SERVER_URL'];
+		if (devServerUrl && url.startsWith(devServerUrl)) return;
+		if (url.startsWith('file://')) return;
+		event.preventDefault();
+		void shell.openExternal(url);
 	});
 
 	if (process.env['VITE_DEV_SERVER_URL']) {
