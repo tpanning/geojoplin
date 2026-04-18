@@ -3,9 +3,10 @@
 	"version": "0.1.0",
 	"private": true,
 	"description": "View your Joplin notes on a geographical map",
+	"main": "dist-electron/main.js",
 	"scripts": {
 		"start": "vite",
-		"build": "tsc && vite build",
+		"build": "vite build",
 		"preview": "vite preview",
 		"lint": "eslint . --ext .ts,.tsx --quiet",
 		"lint-fix": "eslint . --ext .ts,.tsx --fix --quiet",
@@ -25,6 +26,7 @@
 		"@typescript-eslint/eslint-plugin": "^7.18.0",
 		"@typescript-eslint/parser": "^7.18.0",
 		"@vitejs/plugin-react": "^4.4.1",
+		"electron": "^41.2.1",
 		"eslint": "^8.57.0",
 		"eslint-plugin-github": "^5.0.2",
 		"eslint-plugin-import": "^2.31.0",
@@ -35,7 +37,8 @@
 		"jest-environment-jsdom": "^29.7.0",
 		"ts-jest": "^29.3.2",
 		"typescript": "^5.8.3",
-		"vite": "^6.3.1"
+		"vite": "^6.3.1",
+		"vite-plugin-electron": "^0.29.1"
 	},
 	"engines": {
 		"node": ">=18"
