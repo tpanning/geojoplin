@@ -5,9 +5,10 @@ import { availableIcons, defaultIconName, getIconSvgPath, searchIcons } from '..
 interface Props {
 	layers: NoteLayer[];
 	onLayersChange: (layers: NoteLayer[]) => void;
+	onRefresh: () => void;
 }
 
-let nextId = 1;
+const generateLayerId = (): string => crypto.randomUUID();
 
 const presetColors = [
 	'#3b82f6', // blue
@@ -89,12 +90,12 @@ const IconPicker: React.FC<IconPickerProps> = ({ value, color, onChange }) => {
 	);
 };
 
-const LayerPanel: React.FC<Props> = ({ layers, onLayersChange }) => {
+const LayerPanel: React.FC<Props> = ({ layers, onLayersChange, onRefresh }) => {
 	const [expanded, setExpanded] = useState(false);
 
 	const addLayer = () => {
 		const color = presetColors[layers.length % presetColors.length];
-		onLayersChange([...layers, { id: String(nextId++), query: '', color, icon: defaultIconName }]);
+		onLayersChange([...layers, { id: generateLayerId(), query: '', color, icon: defaultIconName, visible: true }]);
 		setExpanded(true);
 	};
 
@@ -106,21 +107,45 @@ const LayerPanel: React.FC<Props> = ({ layers, onLayersChange }) => {
 		onLayersChange(layers.map((layer) => (layer.id === id ? { ...layer, ...updates } : layer)));
 	};
 
+	const moveLayer = (id: string, direction: 'up' | 'down') => {
+		const index = layers.findIndex(l => l.id === id);
+		if (index < 0) return;
+		const swapIndex = direction === 'up' ? index - 1 : index + 1;
+		if (swapIndex < 0 || swapIndex >= layers.length) return;
+		const next = [...layers];
+		[next[index], next[swapIndex]] = [next[swapIndex], next[index]];
+		onLayersChange(next);
+	};
+
 	return (
 		<div className="layer-panel">
 			<div className="layer-panel-header">
 				<button type="button" className="layer-toggle" onClick={() => setExpanded(!expanded)}>
 					{expanded ? '▾' : '▸'} Layers ({layers.length || 'all notes'})
 				</button>
-				<button type="button" className="layer-add" onClick={addLayer}>+ Add layer</button>
+				<div className="layer-header-actions">
+					<button type="button" className="layer-refresh" onClick={onRefresh} title="Refresh">↺</button>
+					<button type="button" className="layer-add" onClick={addLayer}>+ Add layer</button>
+				</div>
 			</div>
 			{expanded && (
 				<div className="layer-list">
 					{layers.length === 0 && (
 						<div className="layer-hint">No layers defined — showing all geotagged notes with the default style.</div>
 					)}
-					{layers.map((layer) => (
-						<div key={layer.id} className="layer-row">
+				{layers.map((layer, index) => (
+					<div key={layer.id} className={`layer-row${layer.visible ? '' : ' layer-row-hidden'}`}>
+						<input
+							type="checkbox"
+							className="layer-visibility"
+							checked={layer.visible}
+							title={layer.visible ? 'Hide layer' : 'Show layer'}
+							onChange={() => updateLayer(layer.id, { visible: !layer.visible })}
+						/>
+						<div className="layer-move-group">
+							<button type="button" className="layer-move" title="Move up" disabled={index === 0} onClick={() => moveLayer(layer.id, 'up')}>▲</button>
+							<button type="button" className="layer-move" title="Move down" disabled={index === layers.length - 1} onClick={() => moveLayer(layer.id, 'down')}>▼</button>
+						</div>
 							<IconPicker
 								value={layer.icon}
 								color={layer.color}

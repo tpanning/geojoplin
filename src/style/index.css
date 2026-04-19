@@ -75,6 +75,26 @@ html, body, #root {
 	font-size: 0.8rem;
 }
 
+.layer-header-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.3rem;
+}
+
+.layer-refresh {
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 1.1rem;
+	color: #555;
+	padding: 0.1rem 0.3rem;
+	line-height: 1;
+}
+
+.layer-refresh:hover {
+	color: #1a73e8;
+}
+
 .layer-list {
 	padding: 0 0.5rem 0.5rem;
 	display: flex;
@@ -92,6 +112,44 @@ html, body, #root {
 	display: flex;
 	align-items: center;
 	gap: 0.4rem;
+}
+
+.layer-row-hidden {
+	opacity: 0.45;
+}
+
+.layer-visibility {
+	flex-shrink: 0;
+	width: 14px;
+	height: 14px;
+	cursor: pointer;
+	margin: 0;
+}
+
+.layer-move-group {
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+	flex-shrink: 0;
+}
+
+.layer-move {
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 0;
+	line-height: 1;
+	font-size: 0.5rem;
+	color: #999;
+}
+
+.layer-move:disabled {
+	opacity: 0.25;
+	cursor: default;
+}
+
+.layer-move:not(:disabled):hover {
+	color: #333;
 }
 
 .layer-color {

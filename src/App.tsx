@@ -14,6 +14,7 @@ const App: React.FC = () => {
 	const [token, setToken] = useState<string>(loadToken);
 	const [layers, setLayers] = useState<NoteLayer[]>(loadLayers);
 	const [groups, setGroups] = useState<NoteGroup[]>([]);
+	const [refreshKey, setRefreshKey] = useState(0);
 	const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	const handleLayersChange = (newLayers: NoteLayer[]) => {
@@ -34,13 +35,28 @@ const App: React.FC = () => {
 			return;
 		}
 
+		const visibleLayers = currentLayers.filter(l => l.visible);
+		if (visibleLayers.length === 0) {
+			setGroups([]);
+			return;
+		}
+
 		const results = await Promise.all(
-			currentLayers.map(async (layer) => {
+			visibleLayers.map(async (layer) => {
 				const notes = await fetchGeotaggedNotes(currentToken, layer.query);
 				return { notes, color: layer.color, icon: layer.icon };
 			}),
 		);
-		setGroups(results);
+
+		// Only render one marker per note — first matching layer wins
+		const seenIds = new Set<string>();
+		const deduped = results.map(group => {
+			const notes = group.notes.filter(n => !seenIds.has(n.id));
+			notes.forEach(n => seenIds.add(n.id));
+			return { ...group, notes };
+		});
+
+		setGroups(deduped);
 	}, []);
 
 	useEffect(() => {
@@ -54,13 +70,13 @@ const App: React.FC = () => {
 		return () => {
 			if (debounceRef.current) clearTimeout(debounceRef.current);
 		};
-	}, [token, layers, fetchLayers]);
+	}, [token, layers, fetchLayers, refreshKey]);
 
 	if (!token) return <TokenDialog onConfirm={handleToken} />;
 
 	return (
 		<div id="geojoplin-app">
-			<LayerPanel layers={layers} onLayersChange={handleLayersChange} />
+			<LayerPanel layers={layers} onLayersChange={handleLayersChange} onRefresh={() => setRefreshKey(k => k + 1)} />
 			<div id="map-container">
 				<MapView groups={groups} token={token} />
 			</div>

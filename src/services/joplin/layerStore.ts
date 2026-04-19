@@ -11,6 +11,7 @@ const normaliseLayer = (raw: Record<string, unknown>, index: number): NoteLayer 
 		query: typeof raw['query'] === 'string' ? raw['query'] : '',
 		color: typeof raw['color'] === 'string' && raw['color'] ? raw['color'] : '#3b82f6',
 		icon: typeof raw['icon'] === 'string' && raw['icon'] ? raw['icon'] : defaultIconName,
+		visible: typeof raw['visible'] === 'boolean' ? raw['visible'] : true,
 	};
 };
 
