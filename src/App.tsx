@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import MapView, { NoteGroup } from './gui/MapView';
 import LayerPanel from './gui/LayerPanel';
 import TokenDialog from './gui/TokenDialog';
@@ -6,10 +6,13 @@ import { fetchGeotaggedNotes } from './services/joplin/noteService';
 import { loadToken, saveToken } from './services/joplin/tokenStore';
 import { NoteLayer, defaultMarkerColor } from './services/joplin/types';
 
+const fetchDebounceMs = 400;
+
 const App: React.FC = () => {
 	const [token, setToken] = useState<string>(loadToken);
 	const [layers, setLayers] = useState<NoteLayer[]>([]);
 	const [groups, setGroups] = useState<NoteGroup[]>([]);
+	const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	const handleToken = (newToken: string) => {
 		saveToken(newToken);
@@ -34,10 +37,16 @@ const App: React.FC = () => {
 	}, []);
 
 	useEffect(() => {
-		if (!token) return;
-		setGroups([]);
-		fetchLayers(token, layers)
-			.catch((error: unknown) => console.error('Failed to fetch notes:', error));
+		if (!token) return undefined;
+		if (debounceRef.current) clearTimeout(debounceRef.current);
+		debounceRef.current = setTimeout(() => {
+			setGroups([]);
+			fetchLayers(token, layers)
+				.catch((error: unknown) => console.error('Failed to fetch notes:', error));
+		}, fetchDebounceMs);
+		return () => {
+			if (debounceRef.current) clearTimeout(debounceRef.current);
+		};
 	}, [token, layers, fetchLayers]);
 
 	if (!token) return <TokenDialog onConfirm={handleToken} />;
