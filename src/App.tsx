@@ -4,6 +4,7 @@ import LayerPanel from './gui/LayerPanel';
 import TokenDialog from './gui/TokenDialog';
 import { fetchGeotaggedNotes } from './services/joplin/noteService';
 import { loadToken, saveToken } from './services/joplin/tokenStore';
+import { loadLayers, saveLayers } from './services/joplin/layerStore';
 import { NoteLayer, defaultMarkerColor } from './services/joplin/types';
 import { defaultIconName } from './services/map/icons';
 
@@ -11,9 +12,14 @@ const fetchDebounceMs = 400;
 
 const App: React.FC = () => {
 	const [token, setToken] = useState<string>(loadToken);
-	const [layers, setLayers] = useState<NoteLayer[]>([]);
+	const [layers, setLayers] = useState<NoteLayer[]>(loadLayers);
 	const [groups, setGroups] = useState<NoteGroup[]>([]);
 	const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+	const handleLayersChange = (newLayers: NoteLayer[]) => {
+		saveLayers(newLayers);
+		setLayers(newLayers);
+	};
 
 	const handleToken = (newToken: string) => {
 		saveToken(newToken);
@@ -54,7 +60,7 @@ const App: React.FC = () => {
 
 	return (
 		<div id="geojoplin-app">
-			<LayerPanel layers={layers} onLayersChange={setLayers} />
+			<LayerPanel layers={layers} onLayersChange={handleLayersChange} />
 			<div id="map-container">
 				<MapView groups={groups} token={token} />
 			</div>
