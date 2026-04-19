@@ -1,5 +1,8 @@
 import L from 'leaflet';
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 import { MapProvider } from './MapProvider';
+import { MarkupLanguage, NoteBody } from '../joplin/types';
 
 const contentSnippetLength = 500;
 
@@ -22,7 +25,7 @@ export default class LeafletMapProvider implements MapProvider {
 		this.map.setView([latitude, longitude], zoom);
 	}
 
-	public addMarker(latitude: number, longitude: number, title: string, noteId: string, fetchBody: () => Promise<string>): void {
+	public addMarker(latitude: number, longitude: number, title: string, noteId: string, fetchBody: () => Promise<NoteBody>): void {
 		if (!this.map) throw new Error('Map not initialized');
 
 		const container = document.createElement('div');
@@ -48,9 +51,15 @@ export default class LeafletMapProvider implements MapProvider {
 			bodyLoading = true;
 			void (async () => {
 				try {
-					const body = await fetchBody();
-					const truncated = body.length > contentSnippetLength ? `${body.slice(0, contentSnippetLength)}…` : body;
-					bodyEl.textContent = truncated || '(empty)';
+					const { body, markup_language } = await fetchBody();
+					const snippet = body.length > contentSnippetLength ? `${body.slice(0, contentSnippetLength)}…` : body;
+					if (!snippet) {
+						bodyEl.textContent = '(empty)';
+					} else if (markup_language === MarkupLanguage.Html) {
+						bodyEl.innerHTML = DOMPurify.sanitize(snippet);
+					} else {
+						bodyEl.innerHTML = DOMPurify.sanitize(marked.parse(snippet) as string);
+					}
 					bodyLoaded = true;
 				} catch {
 					bodyEl.textContent = 'Failed to load note.';

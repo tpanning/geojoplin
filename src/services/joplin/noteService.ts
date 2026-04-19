@@ -1,5 +1,5 @@
 import joplinClient from './joplinClient';
-import { JoplinNote, PaginatedResponse } from './types';
+import { JoplinNote, NoteBody, PaginatedResponse } from './types';
 
 const noteFields = 'id,title,latitude,longitude';
 
@@ -28,9 +28,8 @@ export const isGeotagged = (note: JoplinNote): boolean => {
 	return lat !== 0 || lon !== 0;
 };
 
-export const fetchNoteBody = async (token: string, noteId: string): Promise<string> => {
-	const response = await joplinClient.get<{ body: string }>(token, `/notes/${noteId}`, { fields: 'body' });
-	return response.body;
+export const fetchNoteBody = async (token: string, noteId: string): Promise<NoteBody> => {
+	return joplinClient.get<NoteBody>(token, `/notes/${noteId}`, { fields: 'body,markup_language' });
 };
 
 export const fetchGeotaggedNotes = async (token: string, query: string): Promise<JoplinNote[]> => {

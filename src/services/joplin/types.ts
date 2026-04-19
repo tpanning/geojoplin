@@ -5,6 +5,16 @@ export interface JoplinNote {
 	longitude: number;
 }
 
+export const MarkupLanguage = {
+	Markdown: 1,
+	Html: 2,
+} as const;
+
+export interface NoteBody {
+	body: string;
+	markup_language: number;
+}
+
 export interface PaginatedResponse<T> {
 	items: T[];
 	has_more: boolean;
