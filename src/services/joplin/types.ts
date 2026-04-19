@@ -24,6 +24,7 @@ export interface NoteLayer {
 	id: string;
 	query: string;
 	color: string;
+	icon: string;
 }
 
 export const defaultMarkerColor = '#3b82f6';

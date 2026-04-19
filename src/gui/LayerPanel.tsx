@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { NoteLayer } from '../services/joplin/types';
+import { availableIcons, defaultIconName, getIconSvgPath } from '../services/map/icons';
 
 interface Props {
 	layers: NoteLayer[];
@@ -19,12 +20,59 @@ const presetColors = [
 	'#f97316', // orange
 ];
 
+const iconPreviewSvg = (iconName: string, fill: string, size = 16) => {
+	const { width, height, path } = getIconSvgPath(iconName);
+	return (
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${width} ${height}`} width={size} height={size}>
+			<path d={path} fill={fill} />
+		</svg>
+	);
+};
+
+interface IconPickerProps {
+	value: string;
+	color: string;
+	onChange: (icon: string) => void;
+}
+
+const IconPicker: React.FC<IconPickerProps> = ({ value, color, onChange }) => {
+	const [open, setOpen] = useState(false);
+
+	return (
+		<div className="layer-icon-picker">
+			<button
+				type="button"
+				className="layer-icon-button"
+				onClick={() => setOpen(!open)}
+				title="Choose icon"
+			>
+				{iconPreviewSvg(value, color, 14)}
+			</button>
+			{open && (
+				<div className="layer-icon-grid">
+					{availableIcons.map((entry) => (
+						<button
+							key={entry.name}
+							type="button"
+							className={`layer-icon-option${entry.name === value ? ' selected' : ''}`}
+							title={entry.label}
+							onClick={() => { onChange(entry.name); setOpen(false); }}
+						>
+							{iconPreviewSvg(entry.name, entry.name === value ? color : '#666', 16)}
+						</button>
+					))}
+				</div>
+			)}
+		</div>
+	);
+};
+
 const LayerPanel: React.FC<Props> = ({ layers, onLayersChange }) => {
 	const [expanded, setExpanded] = useState(false);
 
 	const addLayer = () => {
 		const color = presetColors[layers.length % presetColors.length];
-		onLayersChange([...layers, { id: String(nextId++), query: '', color }]);
+		onLayersChange([...layers, { id: String(nextId++), query: '', color, icon: defaultIconName }]);
 		setExpanded(true);
 	};
 
@@ -51,6 +99,11 @@ const LayerPanel: React.FC<Props> = ({ layers, onLayersChange }) => {
 					)}
 					{layers.map((layer) => (
 						<div key={layer.id} className="layer-row">
+							<IconPicker
+								value={layer.icon}
+								color={layer.color}
+								onChange={(icon) => updateLayer(layer.id, { icon })}
+							/>
 							<input
 								type="color"
 								value={layer.color}

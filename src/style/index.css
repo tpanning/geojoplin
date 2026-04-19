@@ -126,6 +126,59 @@ html, body, #root {
 	color: #ef4444;
 }
 
+.layer-icon-picker {
+	position: relative;
+	flex-shrink: 0;
+}
+
+.layer-icon-button {
+	width: 28px;
+	height: 28px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	background: #fff;
+	cursor: pointer;
+}
+
+.layer-icon-grid {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	z-index: 1000;
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	gap: 2px;
+	padding: 4px;
+	background: #fff;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.layer-icon-option {
+	width: 28px;
+	height: 28px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid transparent;
+	border-radius: 3px;
+	background: none;
+	cursor: pointer;
+}
+
+.layer-icon-option:hover {
+	background: #f0f0f0;
+}
+
+.layer-icon-option.selected {
+	border-color: #3b82f6;
+	background: #eff6ff;
+}
+
 .geojoplin-marker-icon {
 	background: none;
 	border: none;

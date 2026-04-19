@@ -5,6 +5,7 @@ import TokenDialog from './gui/TokenDialog';
 import { fetchGeotaggedNotes } from './services/joplin/noteService';
 import { loadToken, saveToken } from './services/joplin/tokenStore';
 import { NoteLayer, defaultMarkerColor } from './services/joplin/types';
+import { defaultIconName } from './services/map/icons';
 
 const fetchDebounceMs = 400;
 
@@ -23,14 +24,14 @@ const App: React.FC = () => {
 		if (currentLayers.length === 0) {
 			// No layers defined — fetch all geotagged notes with the default color
 			const notes = await fetchGeotaggedNotes(currentToken, '');
-			setGroups([{ notes, color: defaultMarkerColor }]);
+			setGroups([{ notes, color: defaultMarkerColor, icon: defaultIconName }]);
 			return;
 		}
 
 		const results = await Promise.all(
 			currentLayers.map(async (layer) => {
 				const notes = await fetchGeotaggedNotes(currentToken, layer.query);
-				return { notes, color: layer.color };
+				return { notes, color: layer.color, icon: layer.icon };
 			}),
 		);
 		setGroups(results);

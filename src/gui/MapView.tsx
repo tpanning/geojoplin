@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { MapProvider } from '../services/map/MapProvider';
 import LeafletMapProvider from '../services/map/LeafletMapProvider';
 import { JoplinNote } from '../services/joplin/types';
+import { defaultIconName } from '../services/map/icons';
 import { fetchNoteBody } from '../services/joplin/noteService';
 import 'leaflet/dist/leaflet.css';
 
@@ -12,6 +13,7 @@ const defaultZoom = 2;
 export interface NoteGroup {
 	notes: JoplinNote[];
 	color: string;
+	icon: string;
 }
 
 interface Props {
@@ -43,7 +45,7 @@ const MapView: React.FC<Props> = ({ groups, token }) => {
 		provider.clearMarkers();
 		for (const group of groups) {
 			for (const note of group.notes) {
-				provider.addMarker(note.latitude, note.longitude, note.title, note.id, group.color, () => fetchNoteBody(token, note.id));
+				provider.addMarker(note.latitude, note.longitude, note.title, note.id, group.color, group.icon ?? defaultIconName, () => fetchNoteBody(token, note.id));
 			}
 		}
 		provider.fitToMarkers();
