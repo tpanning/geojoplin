@@ -32,13 +32,16 @@ export interface IconEntry {
 	definition: IconDefinition;
 }
 
+// Pin-style icons: rendered as-is, anchored at center-bottom
+export const pinIconNames = new Set<string>(['location-dot', 'thumbtack']);
+
 export const availableIcons: IconEntry[] = [
 	{ name: 'location-dot', label: 'Pin', definition: faLocationDot },
+	{ name: 'thumbtack', label: 'Thumbtack', definition: faThumbtack },
 	{ name: 'star', label: 'Star', definition: faStar },
 	{ name: 'heart', label: 'Heart', definition: faHeart },
 	{ name: 'flag', label: 'Flag', definition: faFlag },
 	{ name: 'bookmark', label: 'Bookmark', definition: faBookmark },
-	{ name: 'thumbtack', label: 'Thumbtack', definition: faThumbtack },
 	{ name: 'map-pin', label: 'Map pin', definition: faMapPin },
 	{ name: 'circle-info', label: 'Info', definition: faCircleInfo },
 	{ name: 'house', label: 'House', definition: faHouse },
