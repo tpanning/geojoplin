@@ -17,7 +17,7 @@ const App: React.FC = () => {
 	};
 
 	useEffect(() => {
-		if (!token || !query) return;
+		if (!token) return;
 		setNotes([]);
 		fetchGeotaggedNotes(token, query)
 			.then(setNotes)

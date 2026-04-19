@@ -3,10 +3,26 @@ import { JoplinNote, NoteBody, PaginatedResponse } from './types';
 
 const noteFields = 'id,title,latitude,longitude';
 
-const fetchPage = async (token: string, query: string, page: number): Promise<PaginatedResponse<JoplinNote>> => {
+const fetchSearchPage = async (token: string, query: string, page: number): Promise<PaginatedResponse<JoplinNote>> => {
 	const response = await joplinClient.get<PaginatedResponse<JoplinNote>>(token, '/search', {
 		query,
 		type: 'note',
+		fields: noteFields,
+		page: String(page),
+		limit: '100',
+	});
+	return {
+		...response,
+		items: response.items.map((note) => ({
+			...note,
+			latitude: Number(note.latitude),
+			longitude: Number(note.longitude),
+		})),
+	};
+};
+
+const fetchAllPage = async (token: string, page: number): Promise<PaginatedResponse<JoplinNote>> => {
+	const response = await joplinClient.get<PaginatedResponse<JoplinNote>>(token, '/notes', {
 		fields: noteFields,
 		page: String(page),
 		limit: '100',
@@ -38,7 +54,9 @@ export const fetchGeotaggedNotes = async (token: string, query: string): Promise
 	let hasMore = true;
 
 	while (hasMore) {
-		const response = await fetchPage(token, query, page);
+		const response = query
+			? await fetchSearchPage(token, query, page)
+			: await fetchAllPage(token, page);
 		notes.push(...response.items.filter(isGeotagged));
 		hasMore = response.has_more;
 		page++;
