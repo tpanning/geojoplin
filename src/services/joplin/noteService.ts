@@ -28,6 +28,11 @@ export const isGeotagged = (note: JoplinNote): boolean => {
 	return lat !== 0 || lon !== 0;
 };
 
+export const fetchNoteBody = async (token: string, noteId: string): Promise<string> => {
+	const response = await joplinClient.get<{ body: string }>(token, `/notes/${noteId}`, { fields: 'body' });
+	return response.body;
+};
+
 export const fetchGeotaggedNotes = async (token: string, query: string): Promise<JoplinNote[]> => {
 	const notes: JoplinNote[] = [];
 	let page = 1;

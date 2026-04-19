@@ -1,6 +1,8 @@
 import L from 'leaflet';
 import { MapProvider } from './MapProvider';
 
+const contentSnippetLength = 500;
+
 export default class LeafletMapProvider implements MapProvider {
 
 	private map: L.Map | null = null;
@@ -20,11 +22,43 @@ export default class LeafletMapProvider implements MapProvider {
 		this.map.setView([latitude, longitude], zoom);
 	}
 
-	public addMarker(latitude: number, longitude: number, title: string, noteId: string): void {
+	public addMarker(latitude: number, longitude: number, title: string, noteId: string, fetchBody: () => Promise<string>): void {
 		if (!this.map) throw new Error('Map not initialized');
-		const popupContent = `<a href="joplin://x-callback-url/openNote?id=${noteId}">${title}</a>`;
-		const marker = L.marker([latitude, longitude]).addTo(this.map).bindPopup(popupContent);
+
+		const container = document.createElement('div');
+		container.className = 'geojoplin-popup';
+
+		const titleEl = document.createElement('a');
+		titleEl.href = `joplin://x-callback-url/openNote?id=${noteId}`;
+		titleEl.textContent = title;
+		container.appendChild(titleEl);
+
+		const bodyEl = document.createElement('div');
+		bodyEl.className = 'geojoplin-popup-body';
+		bodyEl.textContent = 'Loading…';
+		container.appendChild(bodyEl);
+
+		const marker = L.marker([latitude, longitude]).addTo(this.map).bindPopup(container);
 		this.markers.push(marker);
+
+		let bodyLoaded = false;
+		let bodyLoading = false;
+		marker.on('popupopen', () => {
+			if (bodyLoaded || bodyLoading) return;
+			bodyLoading = true;
+			void (async () => {
+				try {
+					const body = await fetchBody();
+					const truncated = body.length > contentSnippetLength ? `${body.slice(0, contentSnippetLength)}…` : body;
+					bodyEl.textContent = truncated || '(empty)';
+					bodyLoaded = true;
+				} catch {
+					bodyEl.textContent = 'Failed to load note.';
+				} finally {
+					bodyLoading = false;
+				}
+			})();
+		});
 	}
 
 	public clearMarkers(): void {

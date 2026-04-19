@@ -30,7 +30,7 @@ const App: React.FC = () => {
 		<div id="geojoplin-app">
 			<SearchBar onSearch={setQuery} />
 			<div id="map-container">
-				<MapView notes={notes} />
+				<MapView notes={notes} token={token} />
 			</div>
 		</div>
 	);

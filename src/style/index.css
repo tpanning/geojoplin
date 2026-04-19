@@ -98,3 +98,30 @@ html, body, #root {
 	cursor: default;
 }
 
+.geojoplin-popup {
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+	min-width: 250px;
+	max-width: 350px;
+}
+
+.geojoplin-popup a {
+	font-weight: bold;
+	color: #1a73e8;
+	text-decoration: none;
+}
+
+.geojoplin-popup a:hover {
+	text-decoration: underline;
+}
+
+.geojoplin-popup-body {
+	font-size: 0.8rem;
+	color: #555;
+	white-space: pre-wrap;
+	max-height: 300px;
+	overflow-y: auto;
+	line-height: 1.4;
+}
+

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { MapProvider } from '../services/map/MapProvider';
 import LeafletMapProvider from '../services/map/LeafletMapProvider';
 import { JoplinNote } from '../services/joplin/types';
+import { fetchNoteBody } from '../services/joplin/noteService';
 import 'leaflet/dist/leaflet.css';
 
 const defaultLatitude = 0.0;
@@ -10,9 +11,10 @@ const defaultZoom = 2;
 
 interface Props {
 	notes: JoplinNote[];
+	token: string;
 }
 
-const MapView: React.FC<Props> = ({ notes }) => {
+const MapView: React.FC<Props> = ({ notes, token }) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const providerRef = useRef<MapProvider | null>(null);
 
@@ -36,10 +38,10 @@ const MapView: React.FC<Props> = ({ notes }) => {
 		provider.clearMarkers();
 		if (notes.length === 0) return;
 		for (const note of notes) {
-			provider.addMarker(note.latitude, note.longitude, note.title, note.id);
+			provider.addMarker(note.latitude, note.longitude, note.title, note.id, () => fetchNoteBody(token, note.id));
 		}
 		provider.fitToMarkers();
-	}, [notes]);
+	}, [notes, token]);
 
 	return <div ref={containerRef} style={{ width: '100%', height: '100%' }} />;
 };
