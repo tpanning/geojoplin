@@ -9,12 +9,17 @@ const defaultLatitude = 0.0;
 const defaultLongitude = 0.0;
 const defaultZoom = 2;
 
-interface Props {
+export interface NoteGroup {
 	notes: JoplinNote[];
+	color: string;
+}
+
+interface Props {
+	groups: NoteGroup[];
 	token: string;
 }
 
-const MapView: React.FC<Props> = ({ notes, token }) => {
+const MapView: React.FC<Props> = ({ groups, token }) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const providerRef = useRef<MapProvider | null>(null);
 
@@ -36,12 +41,13 @@ const MapView: React.FC<Props> = ({ notes, token }) => {
 		const provider = providerRef.current;
 		if (!provider) return;
 		provider.clearMarkers();
-		if (notes.length === 0) return;
-		for (const note of notes) {
-			provider.addMarker(note.latitude, note.longitude, note.title, note.id, () => fetchNoteBody(token, note.id));
+		for (const group of groups) {
+			for (const note of group.notes) {
+				provider.addMarker(note.latitude, note.longitude, note.title, note.id, group.color, () => fetchNoteBody(token, note.id));
+			}
 		}
 		provider.fitToMarkers();
-	}, [notes, token]);
+	}, [groups, token]);
 
 	return <div ref={containerRef} style={{ width: '100%', height: '100%' }} />;
 };

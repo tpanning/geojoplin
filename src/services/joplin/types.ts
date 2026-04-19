@@ -19,3 +19,11 @@ export interface PaginatedResponse<T> {
 	items: T[];
 	has_more: boolean;
 }
+
+export interface NoteLayer {
+	id: string;
+	query: string;
+	color: string;
+}
+
+export const defaultMarkerColor = '#3b82f6';

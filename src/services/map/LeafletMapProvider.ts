@@ -8,6 +8,17 @@ marked.use({ async: false });
 
 const contentSnippetLength = 500;
 
+const createColoredIcon = (color: string): L.DivIcon => {
+	const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="25" height="41" viewBox="0 0 25 41"><path d="M12.5 0C5.6 0 0 5.6 0 12.5C0 21.9 12.5 41 12.5 41S25 21.9 25 12.5C25 5.6 19.4 0 12.5 0z" fill="${color}" stroke="#fff" stroke-width="1.5"/><circle cx="12.5" cy="12.5" r="5" fill="#fff"/></svg>`;
+	return L.divIcon({
+		html: svg,
+		className: 'geojoplin-marker-icon',
+		iconSize: [25, 41],
+		iconAnchor: [12, 41],
+		popupAnchor: [1, -34],
+	});
+};
+
 export default class LeafletMapProvider implements MapProvider {
 
 	private map: L.Map | null = null;
@@ -27,7 +38,7 @@ export default class LeafletMapProvider implements MapProvider {
 		this.map.setView([latitude, longitude], zoom);
 	}
 
-	public addMarker(latitude: number, longitude: number, title: string, noteId: string, fetchBody: () => Promise<NoteBody>): void {
+	public addMarker(latitude: number, longitude: number, title: string, noteId: string, color: string, fetchBody: () => Promise<NoteBody>): void {
 		if (!this.map) throw new Error('Map not initialized');
 
 		const container = document.createElement('div');
@@ -43,7 +54,8 @@ export default class LeafletMapProvider implements MapProvider {
 		bodyEl.textContent = 'Loading…';
 		container.appendChild(bodyEl);
 
-		const marker = L.marker([latitude, longitude]).addTo(this.map).bindPopup(container);
+		const icon = createColoredIcon(color);
+		const marker = L.marker([latitude, longitude], { icon }).addTo(this.map).bindPopup(container);
 		this.markers.push(marker);
 
 		let bodyLoaded = false;

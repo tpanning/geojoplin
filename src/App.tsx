@@ -1,36 +1,52 @@
-import React, { useEffect, useState } from 'react';
-import MapView from './gui/MapView';
-import SearchBar from './gui/SearchBar';
+import React, { useCallback, useEffect, useState } from 'react';
+import MapView, { NoteGroup } from './gui/MapView';
+import LayerPanel from './gui/LayerPanel';
 import TokenDialog from './gui/TokenDialog';
 import { fetchGeotaggedNotes } from './services/joplin/noteService';
 import { loadToken, saveToken } from './services/joplin/tokenStore';
-import { JoplinNote } from './services/joplin/types';
+import { NoteLayer, defaultMarkerColor } from './services/joplin/types';
 
 const App: React.FC = () => {
 	const [token, setToken] = useState<string>(loadToken);
-	const [query, setQuery] = useState<string>('');
-	const [notes, setNotes] = useState<JoplinNote[]>([]);
+	const [layers, setLayers] = useState<NoteLayer[]>([]);
+	const [groups, setGroups] = useState<NoteGroup[]>([]);
 
 	const handleToken = (newToken: string) => {
 		saveToken(newToken);
 		setToken(newToken);
 	};
 
+	const fetchLayers = useCallback(async (currentToken: string, currentLayers: NoteLayer[]) => {
+		if (currentLayers.length === 0) {
+			// No layers defined — fetch all geotagged notes with the default color
+			const notes = await fetchGeotaggedNotes(currentToken, '');
+			setGroups([{ notes, color: defaultMarkerColor }]);
+			return;
+		}
+
+		const results = await Promise.all(
+			currentLayers.map(async (layer) => {
+				const notes = await fetchGeotaggedNotes(currentToken, layer.query);
+				return { notes, color: layer.color };
+			}),
+		);
+		setGroups(results);
+	}, []);
+
 	useEffect(() => {
 		if (!token) return;
-		setNotes([]);
-		fetchGeotaggedNotes(token, query)
-			.then(setNotes)
+		setGroups([]);
+		fetchLayers(token, layers)
 			.catch((error: unknown) => console.error('Failed to fetch notes:', error));
-	}, [token, query]);
+	}, [token, layers, fetchLayers]);
 
 	if (!token) return <TokenDialog onConfirm={handleToken} />;
 
 	return (
 		<div id="geojoplin-app">
-			<SearchBar onSearch={setQuery} />
+			<LayerPanel layers={layers} onLayersChange={setLayers} />
 			<div id="map-container">
-				<MapView notes={notes} token={token} />
+				<MapView groups={groups} token={token} />
 			</div>
 		</div>
 	);
