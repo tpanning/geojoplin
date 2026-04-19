@@ -143,19 +143,46 @@ html, body, #root {
 	cursor: pointer;
 }
 
-.layer-icon-grid {
+.layer-icon-backdrop {
+	position: fixed;
+	inset: 0;
+	z-index: 1099;
+}
+
+.layer-icon-dropdown {
 	position: absolute;
 	top: 100%;
 	left: 0;
-	z-index: 1000;
-	display: grid;
-	grid-template-columns: repeat(6, 1fr);
-	gap: 2px;
+	z-index: 1100;
+	width: 196px;
 	padding: 4px;
 	background: #fff;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.layer-icon-search {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 4px 6px;
+	margin-bottom: 4px;
+	font-size: 0.8rem;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	outline: none;
+}
+
+.layer-icon-search:focus {
+	border-color: #3b82f6;
+}
+
+.layer-icon-grid {
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	gap: 2px;
+	max-height: 168px;
+	overflow-y: auto;
 }
 
 .layer-icon-option {

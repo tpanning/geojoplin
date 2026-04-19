@@ -1,4 +1,6 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import iconFamiliesMetaRaw from '@fortawesome/fontawesome-free/metadata/icon-families.json';
 import {
 	faLocationDot,
 	faTent,
@@ -64,13 +66,47 @@ export const availableIcons: IconEntry[] = [
 
 export const defaultIconName = 'location-dot';
 
-const iconMap = new Map<string, IconDefinition>(
-	availableIcons.map((entry) => [entry.name, entry.definition]),
+interface IconFamilyMeta {
+	label?: string;
+	search?: { terms?: string[] };
+}
+
+const iconFamiliesMeta = iconFamiliesMetaRaw as Record<string, IconFamilyMeta>;
+
+const labelFromName = (name: string): string =>
+	name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+// Full map of every FA solid icon, used by getIconSvgPath and search.
+const allIconsMap = new Map<string, IconDefinition>(
+	(Object.values(fas) as IconDefinition[])
+		.filter(def => def && typeof def.iconName === 'string')
+		.map(def => [def.iconName, def]),
 );
+
+// Sorted array of all solid icons for search results.
+const allIconsList: IconEntry[] = [...allIconsMap.entries()]
+	.map(([name, definition]) => {
+		const meta = iconFamiliesMeta[name];
+		return {
+			name,
+			label: meta?.label ?? labelFromName(name),
+			definition,
+		};
+	})
+	.sort((a, b) => a.name.localeCompare(b.name));
+
+export const searchIcons = (query: string, limit = 48): IconEntry[] => {
+	const q = query.toLowerCase().trim();
+	return allIconsList.filter(e => {
+		if (e.name.includes(q) || e.label.toLowerCase().includes(q)) return true;
+		const terms = iconFamiliesMeta[e.name]?.search?.terms;
+		return terms ? terms.some(t => t.includes(q)) : false;
+	}).slice(0, limit);
+};
 
 // Returns the SVG path string and viewBox dimensions for a given icon name.
 export const getIconSvgPath = (name: string): { width: number; height: number; path: string } => {
-	const def = iconMap.get(name) ?? iconMap.get(defaultIconName)!;
+	const def = allIconsMap.get(name) ?? allIconsMap.get(defaultIconName)!;
 	const [width, height, , , path] = def.icon;
 	return { width, height, path: Array.isArray(path) ? path[0] : path };
 };

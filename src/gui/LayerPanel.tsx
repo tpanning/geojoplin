@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { NoteLayer } from '../services/joplin/types';
-import { availableIcons, defaultIconName, getIconSvgPath } from '../services/map/icons';
+import { availableIcons, defaultIconName, getIconSvgPath, searchIcons } from '../services/map/icons';
 
 interface Props {
 	layers: NoteLayer[];
@@ -37,6 +37,15 @@ interface IconPickerProps {
 
 const IconPicker: React.FC<IconPickerProps> = ({ value, color, onChange }) => {
 	const [open, setOpen] = useState(false);
+	const [search, setSearch] = useState('');
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		if (open) inputRef.current?.focus();
+		else setSearch('');
+	}, [open]);
+
+	const displayedIcons = search ? searchIcons(search) : availableIcons;
 
 	return (
 		<div className="layer-icon-picker">
@@ -49,19 +58,32 @@ const IconPicker: React.FC<IconPickerProps> = ({ value, color, onChange }) => {
 				{iconPreviewSvg(value, color, 14)}
 			</button>
 			{open && (
-				<div className="layer-icon-grid">
-					{availableIcons.map((entry) => (
-						<button
-							key={entry.name}
-							type="button"
-							className={`layer-icon-option${entry.name === value ? ' selected' : ''}`}
-							title={entry.label}
-							onClick={() => { onChange(entry.name); setOpen(false); }}
-						>
-							{iconPreviewSvg(entry.name, entry.name === value ? color : '#666', 16)}
-						</button>
-					))}
-				</div>
+				<>
+					<div className="layer-icon-backdrop" onClick={() => setOpen(false)} />
+					<div className="layer-icon-dropdown">
+						<input
+							ref={inputRef}
+							type="search"
+							className="layer-icon-search"
+							placeholder="Search icons…"
+							value={search}
+							onChange={(e) => setSearch(e.target.value)}
+						/>
+						<div className="layer-icon-grid">
+							{displayedIcons.map((entry) => (
+								<button
+									key={entry.name}
+									type="button"
+									className={`layer-icon-option${entry.name === value ? ' selected' : ''}`}
+									title={entry.label}
+									onClick={() => { onChange(entry.name); setOpen(false); }}
+								>
+									{iconPreviewSvg(entry.name, entry.name === value ? color : '#666', 16)}
+								</button>
+							))}
+						</div>
+					</div>
+				</>
 			)}
 		</div>
 	);

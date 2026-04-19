@@ -1,6 +1,4 @@
 # Features
-* Allow the user to save and load layer settings to local storage
-* Allow the user to search for an icon if they want something different than the defaults
 * Add a refresh button to force GeoJoplin to refresh the data
 * Only render one marker per note. If a note matches multiple layers, only render it for the first layer that it matches.
 * Allow the user to reorder layers
