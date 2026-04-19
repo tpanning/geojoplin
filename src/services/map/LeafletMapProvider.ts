@@ -4,6 +4,8 @@ import DOMPurify from 'dompurify';
 import { MapProvider } from './MapProvider';
 import { MarkupLanguage, NoteBody } from '../joplin/types';
 
+marked.use({ async: false });
+
 const contentSnippetLength = 500;
 
 export default class LeafletMapProvider implements MapProvider {
@@ -58,7 +60,7 @@ export default class LeafletMapProvider implements MapProvider {
 					} else if (markup_language === MarkupLanguage.Html) {
 						bodyEl.innerHTML = DOMPurify.sanitize(snippet);
 					} else {
-						bodyEl.innerHTML = DOMPurify.sanitize(marked.parse(snippet) as string);
+						bodyEl.innerHTML = DOMPurify.sanitize(marked.parse(snippet, { async: false }));
 					}
 					bodyLoaded = true;
 				} catch {
