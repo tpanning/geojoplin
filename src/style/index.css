@@ -95,6 +95,12 @@ html, body, #root {
 	color: #1a73e8;
 }
 
+.app-version {
+	font-size: 0.75rem;
+	color: #aaa;
+	user-select: none;
+}
+
 .layer-list {
 	padding: 0 0.5rem 0.5rem;
 	display: flex;

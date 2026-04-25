@@ -124,6 +124,7 @@ const LayerPanel: React.FC<Props> = ({ layers, onLayersChange, onRefresh }) => {
 					{expanded ? '▾' : '▸'} Layers ({layers.length || 'all notes'})
 				</button>
 				<div className="layer-header-actions">
+					<span className="app-version">v{__APP_VERSION__}</span>
 					<button type="button" className="layer-refresh" onClick={onRefresh} title="Refresh">↺</button>
 					<button type="button" className="layer-add" onClick={addLayer}>+ Add layer</button>
 				</div>
