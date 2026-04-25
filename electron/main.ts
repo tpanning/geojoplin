@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell } from 'electron';
+import { app, BrowserWindow, shell, session } from 'electron';
 import { join } from 'path';
 
 const createWindow = () => {
@@ -29,6 +29,15 @@ const createWindow = () => {
 };
 
 app.whenReady().then(() => {
+	// OpenStreetMap tiles require a Referer header, so we add it here for all requests to their tile servers
+	session.defaultSession.webRequest.onBeforeSendHeaders(
+		{ urls: ['https://*.tile.openstreetmap.org/*'] },
+		(details, callback) => {
+			details.requestHeaders['Referer'] = 'https://geojoplin.app/';
+			callback({ requestHeaders: details.requestHeaders });
+		},
+	);
+
 	createWindow();
 	app.on('activate', () => {
 		if (BrowserWindow.getAllWindows().length === 0) createWindow();
