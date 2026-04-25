@@ -351,9 +351,12 @@ html, body, #root {
 .geojoplin-popup-body {
 	font-size: 0.8rem;
 	color: #555;
-	white-space: pre-wrap;
 	max-height: 300px;
 	overflow-y: auto;
 	line-height: 1.4;
+}
+
+.geojoplin-popup-body p {
+	margin: 0.25em 0;
 }
 
