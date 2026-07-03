@@ -39,4 +39,4 @@ jobs:
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
           mac_certs: ${{ secrets.MAC_CERTS }}
-          mac_cert_password: ${{ secrets.MAC_CERT_PASSWORD }}
+          mac_certs_password: ${{ secrets.MAC_CERTS_PASSWORD }}
