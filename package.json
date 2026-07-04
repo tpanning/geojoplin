@@ -17,12 +17,14 @@
 	"build": {
 		"appId": "org.penkey.GeoJoplin",
 		"productName": "GeoJoplin",
+		"afterSign": "electron-builder-notarize",
 		"files": [
 			"dist/**",
 			"dist-electron/**"
 		],
 		"mac": {
-			"category": "public.app-category.productivity"
+			"category": "public.app-category.productivity",
+			"hardenedRuntime": true
 		}
 	},
 	"dependencies": {
@@ -36,6 +38,7 @@
 		"react-dom": "^19.1.0"
 	},
 	"devDependencies": {
+		"@electron/notarize": "^3.1.1",
 		"@seiyab/eslint-plugin-react-hooks": "4.5.1-beta.0",
 		"@types/dompurify": "^3.0.5",
 		"@types/jest": "^30.0.0",

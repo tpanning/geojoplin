@@ -27,6 +27,12 @@ jobs:
       - name: Build web assets
         run: npm run build --if-present
 
+      - name: Prepare for app notarization (macOS only)
+        if: startsWith(matrix.os, 'macos')
+        run: |
+          mkdir -p ~/private_keys/
+          echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
+
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
