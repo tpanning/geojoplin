@@ -32,12 +32,12 @@ jobs:
       - name: Build web assets
         run: npm run build --if-present
 
-      - name: Build electron
+      - name: Build
         run: npx electron-builder --publish never
         env:
           # macOS signing
-          CSC_LINK: ${{ secrets.MAC_CERTS }}
-          CSC_KEY_PASSWORD: ${{ secrets.MAC_CERTS_PASSWORD }}
+          CSC_LINK: ${{ secrets.MAC_CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
