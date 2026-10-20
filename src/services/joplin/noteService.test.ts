@@ -4,8 +4,9 @@ import { JoplinNote } from './types';
 const makeNote = (latitude: string | number, longitude: string | number): JoplinNote => ({
 	id: 'test-id',
 	title: 'Test Note',
-	latitude,
-	longitude,
+	// Tests pass strings too, since the API may return them despite the type
+	latitude: latitude as number,
+	longitude: longitude as number,
 });
 
 describe('isGeotagged', () => {
