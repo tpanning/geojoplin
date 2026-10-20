@@ -43,6 +43,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: GeoJoplin-Windows-Setup
+          archive: false
           path: |
             dist/*.exe
 
