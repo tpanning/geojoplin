@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: 'npm'
@@ -40,8 +40,19 @@ jobs:
           # CSC_LINK: ${{ secrets.MAC_CSC_LINK }}
           # CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
 
+      - name: Upload Windows installer
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v7
+        with:
+          name: GeoJoplin-Windows-Setup
+          archive: false
+          path: |
+            dist/*.exe
+
+      # Upload the full dist directory for other platforms
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        if: matrix.os != 'windows-latest'
+        uses: actions/upload-artifact@v7
         with:
           name: dist-${{ matrix.os }}
           path: dist/
