@@ -38,7 +38,17 @@ jobs:
           # CSC_LINK: ${{ secrets.MAC_CSC_LINK }}
           # CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
 
+      - name: Upload Windows installer
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v7
+        with:
+          name: GeoJoplin-Windows-Setup
+          path: |
+            dist/*.exe
+
+      # Upload the full dist directory for other platforms
       - name: Upload artifacts
+        if: matrix.os != 'windows-latest'
         uses: actions/upload-artifact@v7
         with:
           name: dist-${{ matrix.os }}
