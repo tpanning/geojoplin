@@ -1,4 +1,5 @@
 node_modules/
 dist/
 dist-electron/
+.tsupgrader/runtime-validation/*-result.json
 .DS_Store

@@ -49,8 +49,8 @@ module.exports = {
 		'eqeqeq': ['error', 'always'],
 		'no-console': ['error', { 'allow': ['warn', 'error'] }],
         'complexity': ['warn', { max: 10 }],
-		'@seiyab/react-hooks/rules-of-hooks': 'error',
-		'@seiyab/react-hooks/exhaustive-deps': ['error', { 'ignoreThisDependency': 'props' }],
+		'react-hooks/rules-of-hooks': 'error',
+		'react-hooks/exhaustive-deps': 'error',
 		'jest/require-top-level-describe': ['error', { 'maxNumberOfTopLevelDescribes': 1 }],
 		'jest/no-identical-title': ['error'],
 		'jest/prefer-lowercase-title': ['error', { 'ignoreTopLevelDescribe': true }],
@@ -79,7 +79,6 @@ module.exports = {
 		}],
 		'comma-spacing': ['error', { 'before': false, 'after': true }],
 		'no-trailing-spaces': 'error',
-		'linebreak-style': ['error', 'unix'],
 		'prefer-template': ['error'],
 		'template-curly-spacing': ['error', 'never'],
 		'object-curly-spacing': ['error', 'always'],
@@ -117,53 +116,22 @@ module.exports = {
 	'plugins': [
 		'react',
 		'@typescript-eslint',
-		'@seiyab/eslint-plugin-react-hooks',
+		'react-hooks',
 		'import',
 		'promise',
 		'jest',
-		'github',
 	],
 	'overrides': [
 		{
 			'files': ['*.ts', '*.tsx'],
 			'parserOptions': {
-				'project': './tsconfig.eslint.json',
+				'projectService': true,
 			},
 			'rules': {
-				'@typescript-eslint/indent': ['error', 'tab', {
-					'ignoredNodes': [
-						// See https://github.com/typescript-eslint/typescript-eslint/issues/1824
-						'TSUnionType',
-					],
-				}],
 				'@typescript-eslint/ban-ts-comment': ['error'],
-				'@typescript-eslint/ban-types': 'error',
 				'@typescript-eslint/explicit-member-accessibility': ['error'],
-				'@typescript-eslint/type-annotation-spacing': ['error', { 'before': false, 'after': true }],
 				'@typescript-eslint/array-type': 'error',
 				'@typescript-eslint/no-inferrable-types': ['error'],
-				'@typescript-eslint/comma-dangle': ['error', {
-					'arrays': 'always-multiline',
-					'objects': 'always-multiline',
-					'imports': 'always-multiline',
-					'exports': 'always-multiline',
-					'enums': 'always-multiline',
-					'generics': 'always-multiline',
-					'tuples': 'always-multiline',
-					'functions': 'always-multiline',
-				}],
-				'@typescript-eslint/object-curly-spacing': ['error', 'always'],
-				'@typescript-eslint/semi': ['error', 'always'],
-				'@typescript-eslint/member-delimiter-style': ['error', {
-					'multiline': {
-						'delimiter': 'semi',
-						'requireLast': true,
-					},
-					'singleline': {
-						'delimiter': 'semi',
-						'requireLast': false,
-					},
-				}],
 				'@typescript-eslint/no-floating-promises': ['error'],
 				'@typescript-eslint/naming-convention': ['error',
                     {
