@@ -32,7 +32,7 @@ const presetColors = [
 	'#d9d9d9',
 	'#bc80bd',
 	'#ccebc5',
-	'#ffed6f'
+	'#ffed6f',
 ];
 
 const iconPreviewSvg = (iconName: string, fill: string, size = 16) => {
