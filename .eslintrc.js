@@ -125,7 +125,9 @@ module.exports = {
 		{
 			'files': ['*.ts', '*.tsx'],
 			'parserOptions': {
-				'projectService': true,
+				'projectService': {
+					'allowDefaultProject': ['vite.config.ts'],
+				},
 			},
 			'rules': {
 				'@typescript-eslint/ban-ts-comment': ['error'],

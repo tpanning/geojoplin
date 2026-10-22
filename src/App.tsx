@@ -52,7 +52,9 @@ const App: React.FC = () => {
 		const seenIds = new Set<string>();
 		const deduped = results.map(group => {
 			const notes = group.notes.filter(n => !seenIds.has(n.id));
-			notes.forEach(n => seenIds.add(n.id));
+			for (const note of notes) {
+				seenIds.add(note.id);
+			}
 			return { ...group, notes };
 		});
 
@@ -62,10 +64,13 @@ const App: React.FC = () => {
 	useEffect(() => {
 		if (!token) return undefined;
 		if (debounceRef.current) clearTimeout(debounceRef.current);
-		debounceRef.current = setTimeout(() => {
+		debounceRef.current = setTimeout(async () => {
 			setGroups([]);
-			fetchLayers(token, layers)
-				.catch((error: unknown) => console.error('Failed to fetch notes:', error));
+			try {
+				await fetchLayers(token, layers);
+			} catch (error: unknown) {
+				console.error('Failed to fetch notes:', error);
+			}
 		}, fetchDebounceMs);
 		return () => {
 			if (debounceRef.current) clearTimeout(debounceRef.current);

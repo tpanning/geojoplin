@@ -24,4 +24,35 @@ export default [
 		...config,
 		files: ['**/*.ts', '**/*.tsx'],
 	})),
+	{
+		files: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+		languageOptions: {
+			globals: {
+				describe: 'readonly',
+				test: 'readonly',
+				expect: 'readonly',
+			},
+		},
+	},
+	{
+		files: ['src/gui/LayerPanel.tsx'],
+		languageOptions: {
+			globals: {
+				__APP_VERSION__: 'readonly',
+			},
+		},
+	},
+	{
+		files: ['vite.config.ts'],
+		rules: {
+			'@typescript-eslint/naming-convention': 'off',
+		},
+	},
+	{
+		files: ['src/vite-env.d.ts'],
+		rules: {
+			'spaced-comment': 'off',
+			'@typescript-eslint/naming-convention': 'off',
+		},
+	},
 ];
