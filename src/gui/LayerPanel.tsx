@@ -148,19 +148,19 @@ const LayerPanel: React.FC<Props> = ({ layers, onLayersChange, onRefresh }) => {
 					{layers.length === 0 && (
 						<div className="layer-hint">No layers defined — showing all geotagged notes with the default style.</div>
 					)}
-				{layers.map((layer, index) => (
-					<div key={layer.id} className={`layer-row${layer.visible ? '' : ' layer-row-hidden'}`}>
-						<input
-							type="checkbox"
-							className="layer-visibility"
-							checked={layer.visible}
-							title={layer.visible ? 'Hide layer' : 'Show layer'}
-							onChange={() => updateLayer(layer.id, { visible: !layer.visible })}
-						/>
-						<div className="layer-move-group">
-							<button type="button" className="layer-move" title="Move up" disabled={index === 0} onClick={() => moveLayer(layer.id, 'up')}>▲</button>
-							<button type="button" className="layer-move" title="Move down" disabled={index === layers.length - 1} onClick={() => moveLayer(layer.id, 'down')}>▼</button>
-						</div>
+					{layers.map((layer, index) => (
+						<div key={layer.id} className={`layer-row${layer.visible ? '' : ' layer-row-hidden'}`}>
+							<input
+								type="checkbox"
+								className="layer-visibility"
+								checked={layer.visible}
+								title={layer.visible ? 'Hide layer' : 'Show layer'}
+								onChange={() => updateLayer(layer.id, { visible: !layer.visible })}
+							/>
+							<div className="layer-move-group">
+								<button type="button" className="layer-move" title="Move up" disabled={index === 0} onClick={() => moveLayer(layer.id, 'up')}>▲</button>
+								<button type="button" className="layer-move" title="Move down" disabled={index === layers.length - 1} onClick={() => moveLayer(layer.id, 'down')}>▼</button>
+							</div>
 							<IconPicker
 								value={layer.icon}
 								color={layer.color}

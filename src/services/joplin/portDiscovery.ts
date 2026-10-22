@@ -13,9 +13,11 @@ const pingPort = async (port: number): Promise<boolean> => {
 	}
 };
 
-export const discoverPort = async (): Promise<number> => {
+const discoverPort = async (): Promise<number> => {
 	for (let port = minPort; port <= maxPort; port++) {
 		if (await pingPort(port)) return port;
 	}
 	throw new Error(`Joplin Web Clipper service not found on ports ${minPort}–${maxPort}. Make sure Joplin is running and the Web Clipper is enabled.`);
 };
+
+export default discoverPort;

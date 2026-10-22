@@ -1,4 +1,4 @@
-import { discoverPort } from './portDiscovery';
+import discoverPort from './portDiscovery';
 
 let portPromise: Promise<number> | null = null;
 

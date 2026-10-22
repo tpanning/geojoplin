@@ -1,6 +1,6 @@
 import L from 'leaflet';
 import { marked } from 'marked';
-import DOMPurify from 'dompurify';
+import DomPurify from 'dompurify';
 import { MapProvider } from './MapProvider';
 import { getIconSvgPath, pinIconNames } from './icons';
 import { MarkupLanguage, NoteBody } from '../joplin/types';
@@ -92,9 +92,9 @@ export default class LeafletMapProvider implements MapProvider {
 					if (!snippet) {
 						bodyEl.textContent = '(empty)';
 					} else if (markup_language === MarkupLanguage.Html) {
-						bodyEl.innerHTML = DOMPurify.sanitize(snippet);
+						bodyEl.innerHTML = DomPurify.sanitize(snippet);
 					} else {
-						bodyEl.innerHTML = DOMPurify.sanitize(marked.parse(snippet, { async: false }));
+						bodyEl.innerHTML = DomPurify.sanitize(marked.parse(snippet, { async: false }));
 					}
 					bodyLoaded = true;
 				} catch {
