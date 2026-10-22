@@ -11,18 +11,18 @@ const makeNote = (latitude: string | number, longitude: string | number): Joplin
 
 describe('isGeotagged', () => {
 	test.each([
-		["51.5", "-0.09"],
+		['51.5', '-0.09'],
 		[51.5, -0.09],
-		["51.5", 0],
+		['51.5', 0],
 		[51.5, 0],
-		[0, "-0.09"],
+		[0, '-0.09'],
 		[0, -0.09],
 	])('returns true when coordinates are valid (%s, %s)', (lat, lon) => {
 		expect(isGeotagged(makeNote(lat, lon))).toBe(true);
 	});
 
 	test('returns false when both coordinates are zero', () => {
-		expect(isGeotagged(makeNote("0", "0"))).toBe(false);
+		expect(isGeotagged(makeNote('0', '0'))).toBe(false);
 	});
 
 	test.each([
@@ -30,7 +30,7 @@ describe('isGeotagged', () => {
 		[undefined, 90],
 		[-46, undefined],
 		[null, null],
-		["", ""],
+		['', ''],
 		[null, 0],
 		[0, null],
 	])('returns false when coordinates are missing (%s, %s)', (lat, lon) => {
