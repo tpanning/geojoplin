@@ -11,14 +11,28 @@ interface Props {
 const generateLayerId = (): string => crypto.randomUUID();
 
 const presetColors = [
-	'#3b82f6', // blue
-	'#ef4444', // red
-	'#22c55e', // green
-	'#f59e0b', // amber
-	'#a855f7', // purple
-	'#ec4899', // pink
-	'#14b8a6', // teal
-	'#f97316', // orange
+	'#a6cee3',
+	'#1f78b4',
+	'#b2df8a',
+	'#33a02c',
+	'#fb9a99',
+	'#e31a1c',
+	'#fdbf6f',
+	'#ff7f00',
+	'#cab2d6',
+	'#6a3d9a',
+	'#ffff99',
+	'#b15928',
+	'#8dd3c7',
+	'#bebada',
+	'#fb8072',
+	'#80b1d3',
+	'#b3de69',
+	'#fccde5',
+	'#d9d9d9',
+	'#bc80bd',
+	'#ccebc5',
+	'#ffed6f',
 ];
 
 const iconPreviewSvg = (iconName: string, fill: string, size = 16) => {
