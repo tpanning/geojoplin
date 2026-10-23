@@ -49,11 +49,19 @@ jobs:
           path: |
             dist/*.exe
 
-      # Upload the full dist directory for other platforms
-      - name: Upload artifacts
-        if: matrix.os != 'windows-latest'
+      - name: Upload macOS installer
+        if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v7
         with:
-          name: dist-${{ matrix.os }}
-          path: dist/
+          name: GeoJoplin-macOS
+          archive: false
+          path: |
+            dist/*.dmg
+
+      # Uncomment for debugging purposes to upload the full dist directory
+      # - name: Upload artifacts
+      #   uses: actions/upload-artifact@v7
+      #   with:
+      #     name: dist-${{ matrix.os }}
+      #     path: dist/
           
