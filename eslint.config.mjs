@@ -28,9 +28,14 @@ export default [
 		files: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
 		languageOptions: {
 			globals: {
+			afterAll: 'readonly',
+			afterEach: 'readonly',
+			beforeEach: 'readonly',
 				describe: 'readonly',
 				test: 'readonly',
 				expect: 'readonly',
+			jest: 'readonly',
+			globalThis: 'readonly',
 			},
 		},
 	},

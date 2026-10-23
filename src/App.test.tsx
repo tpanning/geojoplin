@@ -8,15 +8,17 @@ import { defaultIconName } from './services/map/icons';
 
 Object.defineProperty(globalThis, 'IS_REACT_ACT_ENVIRONMENT', { configurable: true, value: true });
 
-jest.mock('./gui/MapView', (): { __esModule: boolean; default: jest.Mock } => ({
-	__esModule: true,
-	default: jest.fn((): null => null),
-}));
+jest.mock('./gui/MapView', () => {
+	const mapViewModule = { default: jest.fn((): null => null) };
+	Object.defineProperty(mapViewModule, '__esModule', { value: true });
+	return mapViewModule;
+});
 
-jest.mock('./gui/LayerPanel', (): { __esModule: boolean; default: jest.Mock } => ({
-	__esModule: true,
-	default: jest.fn((): null => null),
-}));
+jest.mock('./gui/LayerPanel', () => {
+	const layerPanelModule = { default: jest.fn((): null => null) };
+	Object.defineProperty(layerPanelModule, '__esModule', { value: true });
+	return layerPanelModule;
+});
 
 jest.mock('./services/joplin/noteService', () => ({
 	fetchGeotaggedNotes: jest.fn(),

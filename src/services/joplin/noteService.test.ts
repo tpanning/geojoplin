@@ -2,10 +2,11 @@ import { fetchGeotaggedNotes, isGeotagged } from './noteService';
 import joplinClient from './joplinClient';
 import { JoplinNote, PaginatedResponse } from './types';
 
-jest.mock('./joplinClient', () => ({
-	__esModule: true,
-	default: { get: jest.fn() },
-}));
+jest.mock('./joplinClient', () => {
+	const clientModule = { default: { get: jest.fn() } };
+	Object.defineProperty(clientModule, '__esModule', { value: true });
+	return clientModule;
+});
 
 const makeNote = (latitude: string | number, longitude: string | number): JoplinNote => ({
 	id: 'test-id',
