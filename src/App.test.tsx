@@ -1,4 +1,4 @@
-import React, { act } from 'react';
+import { act } from 'react';
 import { createRoot, Root } from 'react-dom/client';
 import App from './App';
 import MapView from './gui/MapView';
@@ -6,14 +6,16 @@ import { fetchGeotaggedNotes } from './services/joplin/noteService';
 import { defaultMarkerColor, JoplinNote, NoteLayer } from './services/joplin/types';
 import { defaultIconName } from './services/map/icons';
 
-jest.mock('./gui/MapView', () => ({
+Object.defineProperty(globalThis, 'IS_REACT_ACT_ENVIRONMENT', { configurable: true, value: true });
+
+jest.mock('./gui/MapView', (): { __esModule: boolean; default: jest.Mock } => ({
 	__esModule: true,
-	default: jest.fn(() => null),
+	default: jest.fn((): null => null),
 }));
 
-jest.mock('./gui/LayerPanel', () => ({
+jest.mock('./gui/LayerPanel', (): { __esModule: boolean; default: jest.Mock } => ({
 	__esModule: true,
-	default: jest.fn(() => null),
+	default: jest.fn((): null => null),
 }));
 
 jest.mock('./services/joplin/noteService', () => ({
